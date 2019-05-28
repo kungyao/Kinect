@@ -27,7 +27,7 @@ public class MusicEditor : MonoBehaviour
 
     void Awake()
     {
-        Initialize("SHAUN – Way Back Home (feat. Conor Maynard) [Sam Feldt Edit] (Official Lyric Video)");
+        Initialize();
     }
 
     void Update()
@@ -108,9 +108,9 @@ public class MusicEditor : MonoBehaviour
     //    }
     //}
 
-    private void Initialize(string musicName)
+    private void Initialize()
     {
-        AudioClip music = (AudioClip)Resources.Load(musicName);
+        AudioClip music = MusicMgr.GetMusic();
         _aSource.clip = music;
         _aSource.Play();
         _sampleScale = _constSampleScale;

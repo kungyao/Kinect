@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MusicSelectMgr : MonoBehaviour
 {
     public List<Button> _mBtn = new List<Button>();
-    public List<int> _data = new List<int>();
+    public List<string> _data = new List<string>();
 
     private int[] _indexOffset = new int[5] { -2, -1, 0, 1, 2 };
     private List<Text> _mBtnText = new List<Text>();
@@ -15,6 +15,17 @@ public class MusicSelectMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        List<bool> check = MusicMgr.LoadMusic(_data);
+        int rmOffset = 0;
+        //remove file which can't find
+        for(int i = 0; i < check.Count; i++)
+        {
+            if (!check[i])
+            {
+                _data.RemoveAt(i - rmOffset);
+                rmOffset++;
+            }
+        }
         foreach (Button btn in _mBtn)
         {
             _mBtnText.Add(btn.gameObject.GetComponentInChildren<Text>());
