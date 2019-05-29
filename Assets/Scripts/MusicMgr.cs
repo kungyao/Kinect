@@ -11,6 +11,8 @@ public class MusicMgr
 
     static public AudioClip GetMusic()
     {
+        if (IndexNow >= _music.Count || IndexNow < 0)
+            return (AudioClip)Resources.Load<AudioClip>("Way Back Home");
         return _music[IndexNow];
     }
 

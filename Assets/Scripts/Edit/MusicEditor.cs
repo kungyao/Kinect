@@ -5,9 +5,12 @@ using UnityEngine.UI;
 public class MusicEditor : MonoBehaviour
 {
     public MPMgr _pMgr;
-    public Slider _slide;
-    public Slider _mapScale;
+    public Slider _trackSlide;
+    public Slider _trackScale;
+    //use to draw track texture
     public Camera _cam;
+    //frame editor
+    public SongEditor _sEditor;
     public AudioSource _aSource;
     //draw music track
     public LineRenderer _track;
@@ -34,24 +37,24 @@ public class MusicEditor : MonoBehaviour
     {
         if (isInit)
         {
-            _sampleScale = _constSampleScale * _mapScale.value;
+            _sampleScale = _constSampleScale * _trackScale.value;
             _drawOffset = _cam.orthographicSize / 1.5f;
             float half = _drawOffset  * _sampleScale;
-            _slide.value = Mathf.RoundToInt(_slide.value);
-            if (_slide.value < half)
+            _trackSlide.value = Mathf.RoundToInt(_trackSlide.value);
+            if (_trackSlide.value < half)
             {
                 _startIndex = Mathf.FloorToInt(0);
                 _endIndex = Mathf.FloorToInt(half * 2);
             }
-            else if (_slide.value + half >= _slide.maxValue)
+            else if (_trackSlide.value + half >= _trackSlide.maxValue)
             {
-                _startIndex = Mathf.FloorToInt(_slide.maxValue - half * 2);
-                _endIndex = Mathf.FloorToInt(_slide.maxValue);
+                _startIndex = Mathf.FloorToInt(_trackSlide.maxValue - half * 2);
+                _endIndex = Mathf.FloorToInt(_trackSlide.maxValue);
             }
             else
             {
-                _startIndex = Mathf.FloorToInt(_slide.value - half);
-                _endIndex = Mathf.FloorToInt(_slide.value + half);
+                _startIndex = Mathf.FloorToInt(_trackSlide.value - half);
+                _endIndex = Mathf.FloorToInt(_trackSlide.value + half);
             }
             _startIndex = _startIndex < 0 ? 0 : _startIndex;
             _endIndex = _endIndex >= _data.Length ? _data.Length - 1 : _endIndex;
@@ -61,13 +64,18 @@ public class MusicEditor : MonoBehaviour
         }
     }
 
+    public void GoEditMode()
+    {
+        _sEditor.Initialize((int)_trackSlide.value);
+    }
+
     private void DrawLine()
     {
         if (isInit)
         {
             //print(_startIndex + "   " + _endIndex+"  "+ _data.Length);
             //print(_slide.value - _startIndex);
-            float redLine = (_slide.value - _startIndex) / _sampleScale - _drawOffset;
+            float redLine = (_trackSlide.value - _startIndex) / _sampleScale - _drawOffset;
             _trackNow.SetPosition(0, new Vector3(redLine, 100, 0));
             _trackNow.SetPosition(1, new Vector3(redLine, -100, 0));
             for (int i = _startIndex; i <= _endIndex; i++)
@@ -82,31 +90,6 @@ public class MusicEditor : MonoBehaviour
             _trackNow.positionCount = 0;
         }
     }
-
-    //private void OnDrawGizmos()
-    //{
-    //    if (isInit)
-    //    {
-    //        Gizmos.color = Color.red;
-    //        float redLine = (_slide.value - _startIndex) / _sampleScale - _drawOffset;
-    //        Gizmos.DrawLine(new Vector2(redLine, 100), new Vector2(redLine, -100));
-    //        Gizmos.color = Color.white;
-    //        Vector2 pre = Vector2.zero;
-    //        for (int i = _startIndex; i <= _endIndex; i++) 
-    //        {
-    //            if (i == _startIndex)
-    //            {
-    //                pre = new Vector2((i - _startIndex) / _sampleScale - _drawOffset, _data[i] * _amplitude);
-    //            }
-    //            else
-    //            {
-    //                Vector2 now = new Vector2((i - _startIndex) / _sampleScale - _drawOffset, _data[i] * _amplitude);
-    //                Gizmos.DrawLine(pre, now);
-    //                pre = now;
-    //            }
-    //        }
-    //    }
-    //}
 
     private void Initialize()
     {
@@ -130,9 +113,9 @@ public class MusicEditor : MonoBehaviour
             else
                 _data[i] = tmpData[inverse];
         }
-        _slide.minValue = 0;
-        _slide.maxValue = Mathf.FloorToInt(music.length * _constSampleScale);
-        _slide.value = 0;
+        _trackSlide.minValue = 0;
+        _trackSlide.maxValue = Mathf.FloorToInt(music.length * _constSampleScale);
+        _trackSlide.value = 0;
         isInit = true;
         _pMgr.Initialize(_constSampleScale, music.length);
     }
