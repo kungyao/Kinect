@@ -14,6 +14,11 @@ public class MusicEritorBtn : MonoBehaviour
         _frameEditorGroup.SetActive(true);
     }
 
+    public void OnReadClick()
+    {
+        InfoManager.readJson(MusicMgr.GetMusic().name);
+    }
+
     public void OnSaveClick()
     {
         InfoManager.writeJson();

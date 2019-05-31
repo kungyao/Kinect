@@ -6,10 +6,21 @@ using LitJson;
 
 public class gameInfos
 {
-    public string music_name = "";
-    public double music_length = 0;
-    public int music_samples = 0;
-    public List<gameInfo> game_infos = new List<gameInfo>();
+    public string music_name { get; set; }
+    public double music_length { get; set; }
+    public int music_samples { get; set; }
+    public int music_bpm { get; set; }
+    public List<gameInfo> game_infos { get; set; }
+
+    public gameInfos()
+    {
+
+        music_name = "";
+        music_length = 0;
+        music_samples = 0;
+        music_bpm = 0;
+        game_infos = new List<gameInfo>();
+    }
 }
 
 public class gameInfo
@@ -19,6 +30,13 @@ public class gameInfo
     public int _end_grid;
     public int _rotateIndex;
 
+    public gameInfo()
+    {
+        _time = 0;
+        _start_grid = 0;
+        _end_grid = 0;
+        _rotateIndex = 0;
+    }
     public gameInfo(int time, int s_grid, int e_grid, int rot_idx)
     {
         _time = time;
@@ -98,8 +116,9 @@ public static class InfoManager
     
     public static gameInfos readJson(string musicName)
     {
-        StreamReader file = new StreamReader(Application.streamingAssetsPath + musicName + ".json");
-
-        return new gameInfos();
+        StreamReader file = new StreamReader(System.IO.Path.Combine(Application.streamingAssetsPath, musicName + ".json"));
+        string data = file.ReadToEnd();
+        gameInfos infos = JsonMapper.ToObject<gameInfos>(data);
+        return infos;
     }
 }
