@@ -6,6 +6,7 @@ public class MusicMgr
 {
     static public bool IsInit= false;
     static public int IndexNow = 0;
+    static public int MusicSamples = 0;
 
     static private List<AudioClip> _music = new List<AudioClip>();
 
