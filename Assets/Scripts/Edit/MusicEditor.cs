@@ -98,10 +98,11 @@ public class MusicEditor : MonoBehaviour
         _aSource.Play();
         _sampleScale = _constSampleScale;
         _trackNow.positionCount = 2;
-        int tmpMusicLength = Mathf.FloorToInt(music.length * _constSampleScale);
-        int tmpStep = Mathf.FloorToInt(music.samples / tmpMusicLength);
+        int musicSamples = Mathf.FloorToInt(music.length * _constSampleScale);
+        MusicMgr.MusicSamples = musicSamples;
+        int tmpStep = Mathf.FloorToInt(music.samples / musicSamples);
         //fake data size (sample for each second)
-        _data = new float[tmpMusicLength];
+        _data = new float[musicSamples];
         float[] tmpData = new float[music.samples];
         music.GetData(tmpData, 0);
         //get fake music data per second

@@ -12,7 +12,6 @@ public class gameInfos
     public List<gameInfo> game_infos = new List<gameInfo>();
 }
 
-
 public class gameInfo
 {
     public int _time;
@@ -76,8 +75,12 @@ public static class InfoManager
     public static void writeJson()
     {
         gameInfos infos = new gameInfos();
+        AudioClip tmpClip = MusicMgr.GetMusic();
+        infos.music_name = tmpClip.name;
+        infos.music_length = tmpClip.length;
+        infos.music_samples = MusicMgr.MusicSamples;
 
-        foreach(KeyValuePair<int, frameInfo> f in allInfo)
+        foreach (KeyValuePair<int, frameInfo> f in allInfo)
         {         
             for(int i = 0; i < f.Value.relations.Count; i++)
             {
@@ -88,13 +91,14 @@ public static class InfoManager
         }
         string result = JsonMapper.ToJson(infos);
 
-        StreamWriter file = new StreamWriter(System.IO.Path.Combine(Application.streamingAssetsPath, "GameInfo.json"));
+        StreamWriter file = new StreamWriter(System.IO.Path.Combine(Application.streamingAssetsPath, tmpClip.name + ".json"));
         file.Write(result);
         file.Close();
     }
     
-    public static gameInfos readJson()
+    public static gameInfos readJson(string musicName)
     {
+        StreamReader file = new StreamReader(Application.streamingAssetsPath + musicName + ".json");
 
         return new gameInfos();
     }
